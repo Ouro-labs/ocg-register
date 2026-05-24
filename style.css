@@ -72,10 +72,11 @@ main { max-width: 1160px; margin: 0 auto; padding: 58px 24px 96px; position: rel
 h1 { max-width: 760px; font-size: clamp(36px, 4.8vw, 62px); line-height: 1.05; margin: 0; letter-spacing: -.05em; font-weight: 450; }
 h2 { margin: 0; font-size: clamp(24px, 3vw, 38px); line-height: 1.08; letter-spacing: -.04em; font-weight: 450; }
 h3 { margin: 28px 0 12px; color: var(--ink); letter-spacing: -.02em; font-weight: 450; }
-.lede { max-width: 640px; font-size: clamp(17px, 1.7vw, 20px); line-height: 1.55; color: var(--muted); margin: 28px 0 0; }
+.lede { max-width: 720px; font-size: clamp(18px, 1.9vw, 23px); line-height: 1.48; color: var(--ink); margin: 28px 0 0; }
+.plainPromise { max-width: 690px; margin: 16px 0 0; color: var(--muted); font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; }
 .heroActions, .actions, .scenarioActions, .heroPills, .chain, .publicFiles { display: flex; flex-wrap: wrap; gap: 10px; }
 .heroActions { margin-top: 34px; }
-.primaryCta, .secondaryCta, button {
+.primaryCta, .secondaryCta, .tertiaryCta, button {
   border: 1px solid var(--ink);
   border-radius: 2px;
   padding: 11px 14px;
@@ -86,6 +87,7 @@ h3 { margin: 28px 0 12px; color: var(--ink); letter-spacing: -.02em; font-weight
 }
 .primaryCta, button { color: #fff; background: var(--ink); }
 .secondaryCta, button + button { color: var(--ink); background: #fff; box-shadow: none; }
+.tertiaryCta { color: var(--ink); border-color: var(--line); background: var(--surface-quiet); }
 .heroPills { margin-top: 24px; max-width: 760px; }
 .publicFiles { margin-top: 14px; }
 .publicFiles a { color: var(--ink); font-size: 13px; font-weight: 400; text-decoration: underline; text-underline-offset: 4px; }
