@@ -1,0 +1,30 @@
+{
+  "abuse_controls": [
+    "secret scanning before review",
+    "publisher domain/package verification before signing",
+    "manual review for high-risk capabilities",
+    "revocation-ready signed manifests",
+    "append-only audit log requirement"
+  ],
+  "accepting_submissions": true,
+  "jwks": "../.well-known/ocg/jwks.json",
+  "public_discovery": {
+    "app_manifest_template": "./apps/{slug}.signed.ocg.json",
+    "jwks": "../.well-known/ocg/jwks.json",
+    "registry_index": "./registry-index.json"
+  },
+  "publisher_verification": [
+    "domain control",
+    "package or bundle ownership",
+    "public request signing key",
+    "review contact"
+  ],
+  "rate_limit": {
+    "public_registry_reads_per_ip_per_minute": 120,
+    "submission_envelopes_per_publisher_per_day": 10
+  },
+  "registry_signature_alg": "EdDSA",
+  "review_required": true,
+  "status": "live",
+  "updated_at": "2026-05-24T16:55:20Z"
+}

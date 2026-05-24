@@ -1,0 +1,310 @@
+# Open Calling Graph / MeshKit
+
+> The mobile era gave us apps. The agent era needs a call graph. MeshKit is the trigger for AgentOS: a working call graph for apps that can verify, consent, execute, and prove what happened.
+
+MeshKit makes opt-in apps callable by AI agents through signed, consent-aware capability manifests. Open Calling Graph (OCG) is the public trust layer that lets an adopting agent discover what an app explicitly allows, how to call it safely, and what proof to expect afterward.
+
+This file is written for LLM agents, app developers, agent runtimes, and reviewers deciding whether and how to integrate with OCG.
+
+## One-sentence description
+
+Open Calling Graph is a registry and protocol for callable apps: a participating app declares capabilities, risk, consent policy, schemas, trust metadata, and receipt requirements so an AI agent can request actions without screen scraping or pretending to be the user.
+
+## Core vocabulary
+
+- MeshKit: the SDK/protocol a participating app installs to receive and validate OCG invocations.
+- Open Calling Graph / OCG: the registry of callable app manifests and trust metadata.
+- Callable app: an app that has opted in, registered a manifest, and owns execution of one or more capabilities.
+- Capability: a specific action an app exposes, identified by a stable capability ID such as `notes.append_note` or `grocery.purchase_essentials`.
+- Caller / agent: the AI runtime or app requesting a capability invocation.
+- Target app: the registered app that validates the request and executes its own handler.
+- Manifest: a signed JSON declaration of app identity, capabilities, schemas, risk, consent, trust, and production controls.
+- Consent: the user approval policy required before execution.
+- Receipt: signed, inspectable proof of what the target app did or refused to do.
+
+## Canonical mental model
+
+```text
+User intent
+  -> Agent planning
+  -> OCG discovery
+  -> Capability selection
+  -> Signed invocation request
+  -> Target-app verification
+  -> User consent / policy gate
+  -> Target-owned execution
+  -> Signed receipt
+```
+
+Short primitive:
+
+```text
+App -> Capability -> Risk -> Consent -> Target -> Trust -> Receipt
+```
+
+Discovery is not permission. Registration is not execution. A capability call is valid only when the target app verifies the caller/request and the user's policy permits the action.
+
+## What OCG is
+
+- A public trust layer for opt-in app-to-app and agent-to-app actions.
+- A manifest format for app capabilities, input schemas, result schemas, risk classes, consent policy, target handlers, package identity, signing keys, and registry signatures.
+- A safer alternative to UI scraping, hidden automation, private one-off integrations, and brittle deep links.
+- A way for AI agents to route intent to the app that actually owns the action.
+- A foundation for an AgentOS trigger layer: apps become accountable callable infrastructure rather than passive icons.
+
+## What OCG is not
+
+- Not arbitrary control of installed apps.
+- Not a screen-scraping or accessibility-abuse framework.
+- Not a way to bypass app UI, app sandboxing, OS permissions, app store policy, payment confirmation, or user consent.
+- Not permission to call non-participating apps.
+- Not a secret backdoor. The target app remains in control of validation, consent, execution, refusal, and receipt creation.
+
+## Public artifacts on this site
+
+- Landing / local registration demo: `./index.html`
+- Rendered whitepaper: `./whitepaper.html`
+- Raw whitepaper markdown: `./whitepaper.md`
+- Agent guide: `./llms.txt`
+- Live registry index: `./public/registry-index.json`
+- Registry status: `./public/registry-status.json`
+- Registry JWKS: `./.well-known/ocg/jwks.json`
+- Local manifest generator: `./app.js`
+- Styling: `./style.css`
+
+## Current live registry scope
+
+The current site publishes a live static OCG registry surface for signed discovery and reviewed submission envelopes. Agents can read `./public/registry-index.json`, fetch registry-signed public manifests, inspect `./public/registry-status.json`, and use `./.well-known/ocg/jwks.json` for registry verification metadata.
+
+Real production apps may integrate now if they implement the production readiness bar below and pass publisher verification, risk review, registry signing, receipt verification, monitoring, and revocation controls before public listing. Submission is live; publication is reviewed and fail-closed.
+
+Demo scenarios:
+
+1. Mint Notes
+   - App ID: `ai.meshkit.sample.notes`
+   - Capability: `notes.append_note`
+   - Risk: `write:user_content`
+   - Consent: `per_invocation`
+   - Purpose: append text to a user-selected note.
+
+2. DailyMart Grocery
+   - App ID: `ai.meshkit.sample.dailymart`
+   - Capability: `grocery.purchase_essentials`
+   - Risk: `spend:money`
+   - Consent: `budgeted_per_invocation`
+   - Purpose: purchase household essentials within an approved budget and delivery window.
+
+Generated manifests are local drafts and require backend review before public listing.
+
+## Manifest structure agents should expect
+
+A production OCG manifest should include:
+
+```json
+{
+  "ocg_version": "0.2-production-draft",
+  "registry_signature": {
+    "alg": "Ed25519",
+    "key_id": "ocg-registry-prod-2026-05",
+    "value": "registry-signature-required-before-public-listing"
+  },
+  "app": {
+    "app_id": "ai.meshkit.sample.notes",
+    "display_name": "Mint Notes",
+    "platform": "android",
+    "package_name": "ai.meshkit.sample.notes",
+    "publisher": "MeshKit Samples",
+    "verified": false
+  },
+  "capabilities": [
+    {
+      "id": "notes.append_note",
+      "version": "1.0",
+      "description": "Append text to a user-selected note.",
+      "risk": "write:user_content",
+      "consent": "per_invocation",
+      "input_schema": {
+        "type": "object",
+        "required": ["note_ref", "text"],
+        "properties": {
+          "note_ref": { "type": "string" },
+          "text": { "type": "string" }
+        }
+      },
+      "result_schema": {
+        "type": "object",
+        "required": ["status", "note_ref"],
+        "properties": {
+          "status": { "type": "string" },
+          "note_ref": { "type": "string" },
+          "saved_text": { "type": "string" }
+        }
+      },
+      "android": {
+        "action": "ai.meshkit.action.INVOKE_CAPABILITY",
+        "target_activity": "ai.meshkit.sample.notes.McpInvokeActivity"
+      },
+      "production_controls": {
+        "requires_observed_caller": true,
+        "requires_payload_hash": true,
+        "requires_fresh_timestamp": true,
+        "requires_replay_protection": true,
+        "requires_signed_receipt": true,
+        "max_age_seconds": 300
+      }
+    }
+  ],
+  "trust": {
+    "package_signature_sha256": "64 lowercase or uppercase hex chars",
+    "publisher_domain": "meshkit.ai",
+    "verification_state": "unverified_submission",
+    "request_signing": {
+      "alg": "Ed25519",
+      "key_id": "meshkit-prod-write-2026-05",
+      "public_key_jwk_url": "https://meshkit.ai/.well-known/ocg/{app_id}.jwk.json"
+    }
+  }
+}
+```
+
+## Required invocation checks for adopting agents
+
+Before attempting a call, an adopting agent should:
+
+1. Confirm the target app is registered and verified for the relevant platform.
+2. Select a capability by semantic fit, not by app name alone.
+3. Validate input against `input_schema` before constructing the request.
+4. Respect `risk` and `consent` exactly.
+5. Never downgrade consent requirements.
+6. Never infer permission from discovery alone.
+7. Bind the request to the observed caller identity supplied by the platform where available.
+8. Include a canonical payload hash.
+9. Include a fresh timestamp within the manifest's `max_age_seconds` window.
+10. Include a nonce or equivalent replay-protection value.
+11. Sign the canonical request with the advertised caller/request key.
+12. Expect the target app to refuse the request if identity, signature, schema, freshness, nonce, consent, budget, or app policy fails.
+13. Require a signed receipt or explicit refusal receipt before treating the task as complete.
+
+## Risk classes
+
+Known risk labels in the demo:
+
+- `read:public`: reads public or non-sensitive app data.
+- `read:user_content`: reads user-owned content.
+- `write:user_content`: creates or modifies user-owned content.
+- `send:external`: sends data or messages outside the user's local app boundary.
+- `spend:money`: purchases, payments, subscriptions, or other monetary commitments.
+- `identity`: identity, account, credential, or authentication-sensitive action.
+- `location`: current, historical, or inferred location-sensitive action.
+
+Agents must treat unknown risk labels as high risk and fail closed.
+
+## Consent classes
+
+Known consent policies in the demo:
+
+- `none`: no extra user confirmation beyond already granted policy. Still validate signatures and schemas.
+- `first_use`: ask on first use, then follow stored user policy.
+- `per_invocation`: ask every time before executing.
+- `budgeted_per_invocation`: ask every time and enforce declared budget/limit fields.
+- `always_deny`: do not invoke.
+
+Agents must not convert `per_invocation` or `budgeted_per_invocation` into background execution unless a separate signed foreground-consent delegation explicitly authorizes it.
+
+## Foreground and delegated backend boundary
+
+Preferred MVP boundary:
+
+- A. Foreground active local app MCP: low-risk visible actions happen while the user can see/control the target app.
+- B. Delegated backend MCP: off-screen execution is allowed only after signed foreground consent and must preserve target-app policy and receipts.
+- C. Avoid hybrid local/backend fallback for now because it increases security ambiguity.
+
+For high-risk flows such as money movement, external messaging, identity, or location, require explicit foreground confirmation and signed receipts.
+
+## Receipt expectations
+
+A receipt should be enough for an agent, user, reviewer, or auditor to answer:
+
+- Which app executed or refused the request?
+- Which capability ID and version were invoked?
+- Who requested it?
+- What canonical payload hash was used?
+- When was the request received and completed/refused?
+- What consent or budget was applied?
+- What result fields were produced?
+- What signature proves the receipt was produced by the target app?
+
+Agents should not mark high-risk work complete from UI observation alone if the manifest requires signed receipts.
+
+## Safe agent behavior
+
+When representing MeshKit / OCG, use this language:
+
+- Correct: "OCG lets opt-in apps publish signed callable capabilities with consent, policy checks, and receipts."
+- Correct: "The target app owns validation and execution."
+- Correct: "Agents discover capabilities, prepare valid requests, and wait for signed receipts."
+- Incorrect: "MeshKit controls any app."
+- Incorrect: "OCG bypasses app permissions."
+- Incorrect: "Agents can automate non-participating apps through OCG."
+- Incorrect: "Registration alone authorizes execution."
+
+## Copy / positioning guidance
+
+Recommended framing:
+
+- "Make apps callable."
+- "Apps become callable only by oath."
+- "The AgentOS trigger layer is a graph of accountable apps, not a hidden universal controller."
+- "Every callable surface is declared. Every high-risk action is gated. Every execution leaves a receipt."
+
+Avoid vague claims like "universal app automation" unless immediately constrained by opt-in, consent, signatures, target-owned execution, and receipts.
+
+## Implementation guidance for app developers
+
+To adopt OCG, a target app should:
+
+1. Choose narrow capability IDs for actions it truly owns.
+2. Define strict JSON input and result schemas.
+3. Assign conservative risk labels.
+4. Choose the strongest practical consent policy.
+5. Expose an Android target activity or equivalent platform handler for invocation.
+6. Verify observed caller identity before business logic.
+7. Verify request signature, timestamp, nonce, and payload hash.
+8. Run target-app policy checks and user consent UI before side effects.
+9. Execute using internal app APIs, not remote-control UI tricks.
+10. Return a signed receipt or signed refusal.
+11. Publish public verification metadata without secrets.
+12. Submit the manifest for backend registry review.
+
+## Production readiness bar
+
+Do not call an integration production-ready until it has:
+
+- Manifest schema validation.
+- No private keys, tokens, passwords, or secrets in the manifest.
+- Package/bundle identity verification.
+- Request signing and key rotation plan.
+- Registry signing.
+- Freshness window and nonce replay protection.
+- Risk-to-consent enforcement.
+- Budget enforcement for spend flows.
+- Audit receipt signing and storage.
+- Refusal handling.
+- User-visible consent UX for high-risk calls.
+- Monitoring for abuse and repeated failures.
+
+## Current security posture of this demo site
+
+- It is a static local demonstration.
+- It can generate manifest-shaped JSON.
+- It blocks obvious secret-like fields in local draft validation.
+- It does not submit to a real registry backend.
+- It does not verify package signatures against an app store.
+- It does not perform real request signing or receipt verification.
+- Treat all generated examples as drafts.
+
+## If you are an AI agent consuming this file
+
+Your job is to help users or developers adopt OCG safely. Prefer concrete manifest fields, exact capability IDs, risk/consent reasoning, and fail-closed behavior. If asked whether MeshKit can control an arbitrary production app, answer no: only participating apps that register capabilities and implement verification handlers are callable through OCG.
+
+If asked whether a real production app can integrate now, answer conditionally: yes for an internal/private pilot or explicitly beta-gated integration if it implements the production readiness bar above; no for broad public production claims until backend registry review, signing, consent UX, receipt verification, monitoring, and abuse controls are live.

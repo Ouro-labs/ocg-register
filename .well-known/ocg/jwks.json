@@ -1,0 +1,13 @@
+{
+  "keys": [
+    {
+      "alg": "EdDSA",
+      "crv": "Ed25519",
+      "kid": "ocg-registry-live-ed25519-2026-05",
+      "kty": "OKP",
+      "status": "active",
+      "use": "sig",
+      "x": "2onQ0ezESWNS6U6Jp96qHg1b8M6vswERYvvcQqprpm0"
+    }
+  ]
+}

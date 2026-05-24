@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open Calling Graph • MeshKit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css?v=sacred-bw-3" />
+</head>
+<body data-scenario="notes">
+  <div class="meshGlow meshGlowA"></div>
+  <div class="meshGlow meshGlowB"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="MeshKit home"><span class="mark">OCG</span><span>MeshKit</span></a>
+    <nav aria-label="Primary navigation">
+      <a href="#quickstart">Quickstart</a>
+      <a href="#register">Register</a>
+      <a href="#live-registry">Live registry</a>
+      <a href="#security">Security</a>
+      <a href="#graph">Graph</a>
+      <a href="./whitepaper.html">Whitepaper</a>
+      <a href="./llms.txt">llms.txt</a>
+    </nav>
+    <a class="navCta" href="#register">Make apps callable</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">MeshKit — Open Calling Graph</p>
+      <h1>The mobile era gave us apps. The agent era needs a call graph.</h1>
+      <p class="lede">MeshKit is the trigger for AgentOS: a working call graph for apps that can verify, consent, execute, and prove what happened.</p>
+      <div class="heroActions">
+        <a class="primaryCta" href="#register">Register a callable app</a>
+        <a class="secondaryCta" href="#security">Review trust boundary</a>
+      </div>
+      <div class="heroPills" aria-label="Open Calling Graph promises">
+        <span>Callable apps</span><span>Signed invocation</span><span>Foreground consent</span><span>Audit receipts</span>
+      </div>
+      <div class="publicFiles" aria-label="Public OCG artifacts">
+        <a href="./whitepaper.html">Whitepaper</a>
+        <a href="./llms.txt">llms.txt</a>
+        <a href="./public/registry-index.json">Live registry index</a>
+      </div>
+    </section>
+
+    <section class="card xl liveRegistry" id="live-registry">
+      <div class="sectionHeader wide">
+        <p class="eyebrow compact">Live public registry</p>
+        <h2>Public registry is live for signed discovery and reviewed submissions.</h2>
+        <p>Agents can read registry-signed public manifests now. New apps can generate a review envelope here; publishing still requires publisher verification, risk review, registry signing, and revocation-ready audit metadata.</p>
+      </div>
+      <div class="quickstart-grid">
+        <article class="quickstart-card"><span class="code-pill">GET</span><strong>View live registry index</strong><code>./public/registry-index.json</code></article>
+        <article class="quickstart-card"><span class="code-pill">GET</span><strong>Registry status</strong><code>./public/registry-status.json</code></article>
+        <article class="quickstart-card"><span class="code-pill">JWKS</span><strong>Verify registry signatures</strong><code>./.well-known/ocg/jwks.json</code></article>
+      </div>
+    </section>
+
+    <section class="card xl developerQuickstart" id="quickstart">
+      <div class="sectionHeader wide">
+        <p class="eyebrow compact">Developer quickstart</p>
+        <h2>Attach a real app through the production-safe path.</h2>
+        <p>Generate a buildable sample, lint the manifest, validate before business logic, then show consent and a signed receipt. The public registry surface is live for signed discovery and reviewed submissions.</p>
+      </div>
+      <div class="quickstart-grid">
+        <article class="quickstart-card"><span class="code-pill">1</span><strong>Buildable Android/iOS samples</strong><code>meshkit init target
+python3 -m meshkit_ocg.cli init target --platform android --app-id com.example.notes --capability notes.append_note --risk write:user_content --output app</code></article>
+        <article class="quickstart-card"><span class="code-pill">2</span><strong>Manifest lint</strong><code>meshkit manifest lint
+python3 -m meshkit_ocg.cli manifest lint app/ocg-manifest.json</code></article>
+        <article class="quickstart-card"><span class="code-pill">3</span><strong>Doctor checks</strong><code>meshkit doctor android
+python3 -m meshkit_ocg.cli doctor android --project app</code></article>
+        <article class="quickstart-card"><span class="code-pill">4</span><strong>Consent sheet</strong><p>Target app approval UI appears before risky side effects.</p></article>
+        <article class="quickstart-card"><span class="code-pill">5</span><strong>Receipt view</strong><p>Caller sees a target-owned signed receipt after completion.</p></article>
+      </div>
+    </section>
+
+    <section class="thesis card xl" id="graph">
+      <div>
+        <p class="eyebrow compact">Registry rite</p>
+        <h2>Apps stop being icons. They become accountable infrastructure.</h2>
+      </div>
+      <div class="thesisGrid">
+        <article><span>01</span><strong>Intent routes through OCG</strong><p>Goals resolve to declared capabilities.</p></article>
+        <article><span>02</span><strong>Target app owns execution</strong><p>Identity, risk, consent, and budget are checked first.</p></article>
+        <article><span>03</span><strong>Receipts prove completion</strong><p>Every result leaves an inspectable trail.</p></article>
+      </div>
+    </section>
+
+    <section class="scenario card" id="register">
+      <div>
+        <p class="eyebrow compact">Demo scenarios</p>
+        <h2>Choose the app to declare</h2>
+        <p>OCG register records capability, Risk, Consent, and Trust before an app becomes callable.</p>
+      </div>
+      <div class="scenarioActions" role="group" aria-label="Callable app scenarios">
+        <button type="button" id="scenarioNotes">Mint Notes</button>
+        <button type="button" id="scenarioGrocery">DailyMart Grocery</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <form class="card registryForm" id="registryForm">
+        <div class="sectionHeader">
+          <p class="eyebrow compact">OCG registration</p>
+          <h2>Register a callable app</h2>
+          <p class="formNote"><strong>Local draft generator.</strong> Public submission requires backend review. Do not paste secrets.</p>
+        </div>
+        <label>App display name <input id="displayName" value="Mint Notes" /></label>
+        <label>App ID <input id="appId" value="ai.meshkit.sample.notes" /></label>
+        <label>Android package <input id="packageName" value="ai.meshkit.sample.notes" /></label>
+        <label>Publisher <input id="publisher" value="MeshKit Samples" /></label>
+
+        <h3>Capability contract</h3>
+        <label>Capability ID <input id="capabilityId" value="notes.append_note" /></label>
+        <label>Description <textarea id="description">Append text to a user-selected note.</textarea></label>
+        <label>Risk
+          <select id="risk">
+            <option>read:public</option>
+            <option>read:user_content</option>
+            <option selected>write:user_content</option>
+            <option>send:external</option>
+            <option>spend:money</option>
+            <option>identity</option>
+            <option>location</option>
+          </select>
+        </label>
+        <label>Consent
+          <select id="consent">
+            <option>none</option>
+            <option>first_use</option>
+            <option selected>per_invocation</option>
+            <option>budgeted_per_invocation</option>
+            <option>always_deny</option>
+          </select>
+        </label>
+        <label>Android target activity <input id="targetActivity" value="ai.meshkit.sample.notes.McpInvokeActivity" /></label>
+        <label>Package signature SHA-256 <input id="signature" value="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef" /></label>
+        <label>Request signing key ID <input id="keyId" value="meshkit-prod-2026-05" /></label>
+        <div class="actions">
+          <button type="button" id="generate">Generate manifest</button>
+          <button type="button" id="download">Download JSON</button>
+          <button type="button" id="submitReview">Submit for registry review</button>
+        </div>
+      </form>
+
+      <aside class="card preview" id="manifest">
+        <div class="previewHeader">
+          <div>
+            <p class="eyebrow compact">Live manifest</p>
+            <h2>OCG manifest preview</h2>
+          </div>
+          <span id="statusBadge">valid draft</span>
+        </div>
+        <pre id="output" aria-live="polite"></pre>
+      </aside>
+    </section>
+
+    <section class="card security" id="security">
+      <div class="sectionHeader wide">
+        <p class="eyebrow compact">Production security bar</p>
+        <h2>Trust before invocation.</h2>
+        <p>Production targets fail closed: observed caller, signed request, freshness, replay protection, consent, budget, and audit.</p>
+      </div>
+      <div class="securityGrid">
+        <article><strong>Caller binding</strong><p>Claims match the platform-observed caller.</p></article>
+        <article><strong>Signed requests</strong><p>Canonical payloads and key IDs are verified.</p></article>
+        <article><strong>Risk gates</strong><p>High-risk calls require consent and budget.</p></article>
+        <article><strong>Registry trust</strong><p>Listings are signed and secret-free.</p></article>
+      </div>
+    </section>
+
+    <section class="card map">
+      <h2>Authority chain</h2>
+      <p><strong>App → Capability → Risk → Consent → Target → Trust → Receipt</strong>. OCG register makes that chain explicit.</p>
+      <div class="chain">
+        <span>Callable app</span><span>Capability</span><span>Risk</span><span>Consent</span><span>Target</span><span>Trust</span><span>Receipt</span>
+      </div>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>

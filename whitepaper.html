@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open Calling Graph Whitepaper • MeshKit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css?v=sacred-bw-3" />
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="./index.html#top" aria-label="MeshKit home"><span class="mark">OCG</span><span>MeshKit</span></a>
+    <nav aria-label="Primary navigation">
+      <a href="./index.html#register">Register</a>
+      <a href="./index.html#security">Security</a>
+      <a href="./index.html#graph">Graph</a>
+      <a href="./whitepaper.html" aria-current="page">Whitepaper</a>
+      <a href="./llms.txt">llms.txt</a>
+    </nav>
+    <a class="navCta" href="./index.html#register">Make apps callable</a>
+  </header>
+
+  <main class="paperMain">
+    <article class="paper">
+      <p class="eyebrow">Open Calling Graph whitepaper</p>
+      <h1>The mobile era gave us apps. The agent era needs a call graph.</h1>
+      <p class="lede">MeshKit is the trigger for AgentOS: a working call graph for apps that can verify, consent, execute, and prove what happened.</p>
+
+      <section>
+        <h2>The AgentOS trigger</h2>
+        <p>Mobile apps were built as endpoints: users tap icons, apps open screens, and software waits for direct manipulation. Agents change that model. Apps need to become callable participants while preserving their own policy boundary.</p>
+        <p>MeshKit does not ask current mobile operating systems to pretend they are already AgentOS. Android lets us prototype much of the call graph today. iOS makes the missing native primitives visible: strong caller identity, scoped consent, policy, and receipts should become OS-level concepts.</p>
+      </section>
+
+      <section>
+        <h2>Apps become callable only by oath</h2>
+        <p>OCG is a public trust layer for opt-in callable apps. It records what an app declares, what risk it carries, what consent is required, and what proof must exist after execution.</p>
+      </section>
+
+      <section>
+        <h2>The primitive</h2>
+        <pre class="paperCode">App
+  → Capability
+  → Risk
+  → Consent
+  → Target
+  → Trust
+  → Receipt</pre>
+        <p>This chain is the contract. Discovery is not permission. Registration is not execution. A call becomes valid only when the target app verifies the request and the user’s policy permits it.</p>
+      </section>
+
+      <section>
+        <h2>Why now</h2>
+        <p>AI systems need a safer surface than screen scraping and a more open surface than private app integrations. OCG gives apps a common language for actions: capability IDs, schemas, risk classes, consent policies, package identity, publisher metadata, signing keys, and verification state.</p>
+      </section>
+
+      <section>
+        <h2>Security model</h2>
+        <ul>
+          <li>Observed caller binding</li>
+          <li>Canonical payload hash</li>
+          <li>Fresh timestamp and nonce replay protection</li>
+          <li>Request and registry signatures</li>
+          <li>Risk-gated consent and spend budgets</li>
+          <li>Signed audit receipts</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Boundary</h2>
+        <p>OCG does not bypass app UI, platform security, app sandboxes, target-app policy, or developer-owned handlers. Non-participating apps are not callable through MeshKit.</p>
+      </section>
+
+      <section>
+        <h2>Product thesis</h2>
+        <p>The AgentOS trigger layer is not a hidden universal controller. It is a graph of accountable apps. Every callable surface is declared. Every high-risk action is gated. Every execution leaves a receipt.</p>
+      </section>
+
+      <footer class="paperFooter">
+        <a href="./whitepaper.md">Raw markdown</a>
+        <a href="./index.html">Back to OCG register</a>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>

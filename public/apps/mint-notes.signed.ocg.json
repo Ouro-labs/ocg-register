@@ -1,0 +1,74 @@
+{
+  "app": {
+    "app_id": "ai.meshkit.sample.notes",
+    "display_name": "Mint Notes",
+    "package_name": "ai.meshkit.sample.notes",
+    "platform": "android",
+    "publisher": "MeshKit Samples",
+    "verified": true
+  },
+  "capabilities": [
+    {
+      "android": {
+        "action": "ai.meshkit.action.INVOKE_CAPABILITY",
+        "target_activity": "ai.meshkit.sample.notes.McpInvokeActivity"
+      },
+      "consent": "per_invocation",
+      "description": "Append text to a user-selected note.",
+      "id": "notes.append_note",
+      "input_schema": {
+        "properties": {
+          "note_ref": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "note_ref",
+          "text"
+        ],
+        "type": "object"
+      },
+      "result_schema": {
+        "properties": {
+          "note_ref": {
+            "type": "string"
+          },
+          "saved_text": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "note_ref"
+        ],
+        "type": "object"
+      },
+      "risk": "write:user_content",
+      "version": "1.0"
+    }
+  ],
+  "ocg_version": "0.2-live",
+  "registry_signature": {
+    "alg": "EdDSA",
+    "canonicalization": "ocg-canonical-json/v1",
+    "issued_at": "2026-05-25T00:00:00Z",
+    "kid": "ocg-registry-live-ed25519-2026-05",
+    "value": "HX7ud01y8IQLGxXikEBzlEMNXzg7U5_s6wtkhw5Ar7wEwGBgJA6ELSySY2qcGiLKtoMwfnoGV6_djs4XvVLkDw"
+  },
+  "trust": {
+    "package_signature_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "publisher_domain": "meshkit.ai",
+    "request_signing": {
+      "alg": "SHA256withRSA",
+      "key_id": "meshkit-prod-2026-05",
+      "public_key_base64": "TEST_PUBLIC_KEY_BASE64"
+    },
+    "verification_state": "verified"
+  }
+}

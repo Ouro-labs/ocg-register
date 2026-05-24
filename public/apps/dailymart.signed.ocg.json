@@ -1,0 +1,82 @@
+{
+  "app": {
+    "app_id": "ai.meshkit.sample.dailymart",
+    "display_name": "DailyMart",
+    "package_name": "ai.meshkit.sample.dailymart",
+    "platform": "android",
+    "publisher": "MeshKit Samples",
+    "verified": true
+  },
+  "capabilities": [
+    {
+      "android": {
+        "action": "ai.meshkit.action.INVOKE_CAPABILITY",
+        "target_activity": "ai.meshkit.sample.dailymart.PurchaseInvokeActivity"
+      },
+      "consent": "budgeted_per_invocation",
+      "description": "Purchase household essentials using user-approved address and wallet permissions.",
+      "id": "grocery.purchase_essentials",
+      "input_schema": {
+        "properties": {
+          "delivery_window": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array"
+          },
+          "max_budget_krw": {
+            "type": "integer"
+          },
+          "payment_method": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "max_budget_krw",
+          "delivery_window",
+          "payment_method"
+        ],
+        "type": "object"
+      },
+      "result_schema": {
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "purchased_items": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "order_id"
+        ],
+        "type": "object"
+      },
+      "risk": "spend:money",
+      "version": "1.0"
+    }
+  ],
+  "ocg_version": "0.2-live",
+  "registry_signature": {
+    "alg": "EdDSA",
+    "canonicalization": "ocg-canonical-json/v1",
+    "issued_at": "2026-05-25T00:00:00Z",
+    "kid": "ocg-registry-live-ed25519-2026-05",
+    "value": "3ACxbihBNb-VCmv3Wf2MgK2MAHFuExY-vvmpZHIHQc-9FVbv2embx0a0PHRel_f_4VjWjHq1VRvu1xcVKB-6Cw"
+  },
+  "trust": {
+    "package_signature_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "publisher_domain": "meshkit.ai",
+    "request_signing": {
+      "alg": "SHA256withRSA",
+      "key_id": "meshkit-prod-2026-05",
+      "public_key_base64": "TEST_PUBLIC_KEY_BASE64"
+    },
+    "verification_state": "verified"
+  }
+}
